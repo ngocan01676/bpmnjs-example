@@ -85,6 +85,16 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
             // Your custom logic here
             alert('Task clicked: ' + element.id);
           }
+
+          if (element.type === 'bpmn:SequenceFlow') {
+            const source = element.businessObject.sourceRef;
+            
+            // Check if the source is a gateway
+            if (source.$instanceOf('bpmn:Gateway')) {
+              console.log('Clicked on a sequence flow from a gateway:', element);
+              // Add your custom logic here
+            }
+          }
         });
   }
 
