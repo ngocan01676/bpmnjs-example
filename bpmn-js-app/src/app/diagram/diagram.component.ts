@@ -31,9 +31,7 @@ import { from, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
-  template: `
-    <div #ref class="diagram-container"></div>
-  `,
+  templateUrl: './diagram.component.html',
   styles: [
     `
       .diagram-container {
@@ -74,6 +72,20 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
         commandStack.undo();
       }
     });
+
+        // Listen for element click events
+        var eventBus = this.bpmnJS.get('eventBus') as any;
+
+        eventBus.on('element.click', function(event) {
+          var element = event.element;
+    
+          // Check if the clicked element is a task
+          if (element.type === 'bpmn:Task') {
+            console.log('Task clicked:', element);
+            // Your custom logic here
+            alert('Task clicked: ' + element.id);
+          }
+        });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -121,5 +133,15 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
    */
   private importDiagram(xml: string): Observable<ImportXMLResult> {
     return from(this.bpmnJS.importXML(xml));
+  }
+
+  async saveXml() {
+    try {
+      const result = await this.bpmnJS.saveXML();
+      const { xml } = result;
+      console.log(result);
+    } catch (error) {
+      
+    }
   }
 }
